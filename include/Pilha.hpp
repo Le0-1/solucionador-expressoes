@@ -2,6 +2,8 @@
 #define PILHA_H
 
 #include <iostream>
+#include <exception>
+#include "PilhaExcp.hpp"
 
 const int MAXTAM = 1000;
 
@@ -25,6 +27,9 @@ class Pilha {
         }
 
         T Desempilha() {
+            if (this->EstaVazia()) {
+                throw PilhaExcp::PilhaVazia();
+            }
             T UltimoItem = this->_itens[_topo];
             this->_tamanho--;
             this->_topo--;
@@ -33,10 +38,6 @@ class Pilha {
         }
 
         void Limpa() {
-            if (this->EstaVazia()) {
-                std::cout << "ERRO PILHA ESTÁ VAZIA" << "\n";
-                return;
-            }
             this->_tamanho = 0;
             this->_topo = -1;
         }
@@ -48,8 +49,9 @@ class Pilha {
 
         T VerTopo() {
             if (this->EstaVazia()) {
-                std::cout << "ERRO PILHA ESTÁ VAZIA" << "\n";
+                throw PilhaExcp::PilhaVazia();
             }
+            
             T UltimoValor = this->_itens[_topo];
             return UltimoValor;
         }

@@ -11,6 +11,10 @@ OBJS = \
 	$(OBJ_DIR)/Pilha.o \
 	$(OBJ_DIR)/Parser.o \
 	$(OBJ_DIR)/Resolvedor.o \
+	$(OBJ_DIR)/TipoNo.o \
+	$(OBJ_DIR)/ArvoreBinaria.o \
+	$(OBJ_DIR)/ParserExcp.o \
+	$(OBJ_DIR)/ResolvedorExcp.o \
 	$(OBJ_DIR)/main.o
 
 all: $(EXE)
@@ -30,6 +34,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(INC_DIR)/%.hpp
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) -c $(CFLAGS) $< -I $(INC_DIR) -o $@
 
+valgrind: $(EXE)
+	valgrind --leak-check=full bin/program
 clean:
 	rm -f $(OBJS)
 	rm -f $(EXE)

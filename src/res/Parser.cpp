@@ -28,7 +28,6 @@ bool Parser::ValidacaoGenerica(const std::string& exp) {
         return true;
     }
     else {
-        std::cout << "ERRO: Número de Operadores e Operandos errados\n";
         return false;
     }
 }
@@ -40,6 +39,7 @@ bool Parser::EhOperadorValido(const std::string& exp) {
     else return false;
 }
 
+/*Verifica dentro do número se há algum caractere estranho nele, se há mais de um ponto ou se não contem dígitos*/
 bool Parser::EhNumeroValido(const std::string& token) {
     int NumeroDePontos = 0, NumeroDeDigitos = 0;
 
@@ -60,24 +60,11 @@ bool Parser::EhNumeroValido(const std::string& token) {
     else return true;
 }
 
-std::string Parser::RetornaUltimoToken(const std::string &exp) {
-    std::string Erro = "-1";
-    for (int i = exp.length(); i >= 0; i--) {
-        if (ispunct(exp[i])) {
-            std::string UltimoToken(1, exp[i]);
-            return UltimoToken;
-        }
-    }
-    return Erro;
-}
-
 bool Parser::ValidarInfixa(const std::string &exp) {
     if (ValidacaoGenerica(exp) == false) {
-        std::cout << "ERRO: Validação Genérica Falhou\n";
         return false;
     }
     if (VerificarParenteses(exp) == false) {
-        std::cout << "Numero de Parênteses ou sua disposiçaõ está errada\n";
         return false;
     }
     return true;
@@ -86,13 +73,11 @@ bool Parser::ValidarInfixa(const std::string &exp) {
 
 bool Parser::ValidarPosfixa(const std::string &exp) {
     if (exp.find(")") != std::string::npos || exp.find("(") != std::string::npos) {
-        std::cout << "ERRO: Expressão POSFIXA não pode conter parentêses\n";
         return false;
     }
 
     /*Tem que existir N operandos e N-1 operadores*/
     if (ValidacaoGenerica(exp) == false) {
-        std::cout << "ERRO: Validação Genérica Falhou\n";
         return false;
     }
 
@@ -105,9 +90,7 @@ bool Parser::ValidarPosfixa(const std::string &exp) {
             break;
         }
     }
-
     if (!EhOperadorValido(UltimoToken)) {
-        std::cout << "ERRO: Último Token da Expressão POSFIXA não é um operador Válido\n";
         return false;
     }
 
@@ -121,11 +104,12 @@ bool Parser::ValidarPosfixa(const std::string &exp) {
         return true;
     }
     else {
-        std::cout << "ERRO: Os dois primeiros Tokens da expressão POSFIXA tem que ser números\n";
         return false;
     }
 }
 
+/*Verifica a disposição dos parentêses, além de contar quantos foram abertos e fechados,
+realizando uma verificação mais ampla*/
 bool Parser::VerificarParenteses(const std::string &exp) {
     int Contador = 0, ParentesesAbertos = 0, ParentesesFechados = 0;
 
@@ -134,10 +118,12 @@ bool Parser::VerificarParenteses(const std::string &exp) {
             Contador--;
             ParentesesAbertos++;
         }
+        
         else if (exp[i] == ')') {
             Contador++;
             ParentesesFechados++;
         }
+
         else if (Contador < 0) {
             return false;
         }

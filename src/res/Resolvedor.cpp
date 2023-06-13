@@ -7,6 +7,8 @@
 #include <sstream>
 #include <cstdlib>
 
+#define ERRO "-1"
+
 Resolvedor::Resolvedor() {
     this->_expressao == "";
 }
@@ -16,6 +18,8 @@ Resolvedor::Resolvedor(const std::string &exp) {
     this->ConverterParaArvore();
 }
 
+/*Função auxiliar para retornar a prioridade, usada principalmente para converter
+de infixa para posfixa*/
 int Resolvedor::RetornaPrioridade(const std::string &token) {
     if (token == "+" || token == "-") {
         return 1;
@@ -38,6 +42,7 @@ char Resolvedor::RetornaUltimoCaractere(const std::string &exp) {
 
 void Resolvedor::SetarExpressao(const std::string &exp) {
     this->_expressao = exp;
+    this->_expressao_arvore.Limpa();
     this->ConverterParaArvore();
 }
 
@@ -48,17 +53,18 @@ std::string Resolvedor::GetExpressao() {
     return this->_expressao;
 }
 
+/*Explicação do algoritmo na documentação*/
 std::string Resolvedor::ParaPOSFIXA() {
 
     if (this->_expressao == "") {
-        std::cout << "ERRO: NENHUMA EXPRESSAO ARMAZENADA\n";
-        return "-1";
+        return ERRO;
     }
+    
+    /*Se ela já for posfixa, ou seja, o último caractere é um operando, apenas
+    retorna a expressão armazenada*/
     char UltimoCaractere = RetornaUltimoCaractere(this->_expressao);
-
     if (UltimoCaractere == '+' || UltimoCaractere == '-' || UltimoCaractere == '*' || UltimoCaractere == '/') {
-        std::cout << "ERRO: EXPRESSAO JÁ É POSFIXA\n";
-        return "-1";
+        return this->_expressao;
     }
 
     Pilha<std::string> PilhaAuxiliar;
@@ -93,7 +99,7 @@ std::string Resolvedor::ParaPOSFIXA() {
                 }
                 PilhaAuxiliar.Empilha(Token);
             }
-            catch(PilhaExcp::PilhaVazia) {
+            catch(PilhaExcp::PilhaVazia& e) {
                 PilhaAuxiliar.Empilha(Token);
             }
         }
@@ -105,15 +111,17 @@ std::string Resolvedor::ParaPOSFIXA() {
     return ExpressaoPosfixa;
 }
 
+/*Explicação do algoritmo na documentação*/
 std::string Resolvedor::ParaINFIXA() {
 
     if (this->_expressao == "") {
-        std::cout << "ERRO: NENHUMA EXPRESSAO ARMAZENADA\n";
-        return "-1";
+        return ERRO;
     }
-    if (ispunct(RetornaUltimoCaractere(this->_expressao)) || isdigit(RetornaUltimoCaractere(this->_expressao))) {
-        std::cout << "ERRO: EXPRESSÃO JÁ É INFIXA\n";
-        return "-1";
+    /*Se ela já for infixa, ou seja, o ultimo caractere é um digito ou um parentêses
+    fechado, apenas retorna o que já está armazenado*/
+    char UltimoCaractere = RetornaUltimoCaractere(this->_expressao);
+    if (isdigit(UltimoCaractere) || UltimoCaractere == ')') {
+        return this->_expressao;
     }
 
     Pilha<std::string> PilhaAuxiliar;
@@ -134,9 +142,12 @@ std::string Resolvedor::ParaINFIXA() {
     return ExpressaoInfixa;
 }
 
+/*Explicação do algoritmo na documentação*/
 void Resolvedor::ConverterParaArvore() {
     std::string exp = this->_expressao;
 
+    /*Se o último caractere não for um operando, logo ela é infixa e precisa ser
+    convertida em posfixa para construir a árvore*/
     char UltimoCaractere = RetornaUltimoCaractere(this->_expressao);
     if (!(UltimoCaractere == '+' ||UltimoCaractere == '-' || UltimoCaractere == '*' || UltimoCaractere == '/')) {
         exp = ParaPOSFIXA();
@@ -161,9 +172,10 @@ void Resolvedor::ConverterParaArvore() {
             this->_expressao_arvore.InsereNo(Operador, PrimeiroNo, SegundoNo);
             PilhaDeNos.Empilha(Operador); 
         }
-    } 
+    }
 }
 
+/*Explicação do algoritmo na documentação*/
 double Resolvedor::Resolve(TipoNo* no) {
     if (no == nullptr) {
         return 0.0;
@@ -184,7 +196,7 @@ double Resolvedor::Resolve(TipoNo* no) {
     else if (no->_chave == "*") {
         return ValorEsquerda * ValorDireita;
     }
-    else if (no->_chave == "/") {
+    else {
         if (ValorDireita == 0) {
             throw ResolvedorExcp::DivisorZero();
         }
@@ -194,10 +206,9 @@ double Resolvedor::Resolve(TipoNo* no) {
 
 double Resolvedor::Resolve() {
     if (this->_expressao_arvore._raiz == nullptr) {
-        std::cout << "ERRO: NÃO HÁ NENHUM NÓ NA ÁRVORE\n";
-        return -1;
+        throw ResolvedorExcp::ArvoreVazia();
     }
-    Resolve(this->_expressao_arvore._raiz);
+    return Resolve(this->_expressao_arvore._raiz);
 }
 
 ArvoreBinaria Resolvedor::GetArvore() {

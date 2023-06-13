@@ -5,6 +5,9 @@
 
 #include <iostream>
 
+/*Classe responsável apenas por fazer as operações necessárias na árvore, algumas funções
+não foram utilizadas, como por exemplo: ImprimeArvore(), que imprime uma árvore no terminal
+para melhor visualização*/
 class ArvoreBinaria {
     private:
         TipoNo* _raiz;
@@ -14,10 +17,10 @@ class ArvoreBinaria {
         void PosOrdem(TipoNo* no);
 
     public:
+        void ImprimeArvore();
         ArvoreBinaria();
         ~ArvoreBinaria();
         void Limpa();
-        void ImprimeArvore();
         friend class Resolvedor;
 };  
 

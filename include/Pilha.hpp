@@ -7,6 +7,7 @@
 
 const int MAXTAM = 1000;
 
+/*classe template, implementação no hpp*/
 template <class T>
 class Pilha {
     private:

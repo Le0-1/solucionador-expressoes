@@ -8,6 +8,7 @@ ArvoreBinaria::~ArvoreBinaria() {
     
 }
 
+/*Recebe os parâmetros da função ConverterParaArvore() da classe Resolvedor e faz a manipulação com os ponteiros para a árvores er criada*/
 void ArvoreBinaria::InsereNo(TipoNo* operador, TipoNo* primeirooperando, TipoNo* segundooperando) {
     operador->_esquerda = primeirooperando;
     operador->_direita = segundooperando;
@@ -19,6 +20,9 @@ void ArvoreBinaria::ApagaRecursivo(TipoNo* no) {
         ApagaRecursivo(no->_esquerda);
         ApagaRecursivo(no->_direita);
         delete no;
+    }
+    else {
+        return;
     }
 }
 

@@ -4,7 +4,7 @@ SRC_DIR = ./src
 BIN_DIR = ./bin
 INC_DIR = ./include
 OBJ_DIR = ./obj
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g 
 EXE = $(BIN_DIR)/$(NAME)
 
 OBJS = \
@@ -15,6 +15,7 @@ OBJS = \
 	$(OBJ_DIR)/ArvoreBinaria.o \
 	$(OBJ_DIR)/ParserExcp.o \
 	$(OBJ_DIR)/ResolvedorExcp.o \
+	$(OBJ_DIR)/Opcoes.o \
 	$(OBJ_DIR)/main.o
 
 all: $(EXE)
@@ -36,6 +37,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 valgrind: $(EXE)
 	valgrind --leak-check=full bin/program
+
 clean:
 	rm -f $(OBJS)
 	rm -f $(EXE)

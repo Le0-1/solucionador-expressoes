@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 
+/*Classe responsável pelo fluxo normal do programa explicado na documentação*/
 class Resolvedor {  
     private:
         ArvoreBinaria _expressao_arvore;

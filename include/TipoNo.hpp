@@ -3,6 +3,7 @@
 
 #include <string>
 
+/*Nó que será usado para construir a árvore*/
 class TipoNo {
     private:
         std::string _chave;
